@@ -1,0 +1,86 @@
+apiVersion: scone/5.8
+kind: genservice
+
+# define environment variables
+#  - local ones are only visible for this service
+#  - global ones are defined for all services in a mesh
+
+environment:
+  local:
+    - name: SCONE_ALLOW_DLOPEN
+      value: 1
+    - name: SCONE_HEAP
+      value: 760M
+    - name: SCONE_LOG
+      value: debug
+    - name: INIT_CONTAINER1_ENABLE
+      value: "false"
+    - name: INIT_CONTAINER1
+      value: "{{REDIS_HOST}}"
+    - name: INIT_CONTAINER1_PORT
+      value: "{{REDIS_PORT}}"
+  global:     # values defined/overwritten in Meshfile
+    - name: REDIS_HOST  # get value from Meshfile
+    - name: REDIS_PORT  # get value from Meshfile
+    - name: api_host
+
+injection_files:
+  - path: /tls/client.crt
+    content: $$SCONE::redis_client_cert.crt$$
+  - path: /tls/client.key
+    content: $$SCONE::redis_client_cert.key$$
+  - path: /tls/redis-ca.crt
+    content: $$SCONE::redis_ca_cert.chain$$
+  - path: /tls/flask.crt
+    content: $$SCONE::flask.crt$$
+  - path: /tls/flask.key
+    content: $$SCONE::flask.key$$
+# Network files
+  - path: /etc/resolv.conf
+    content: |
+      nameserver {{CLUSTER_DNS_IP}}
+      search {{K8sNAMESPACE}}.svc.cluster.local svc.cluster.local cluster.local
+      options ndots:5
+  - path: /etc/hosts
+    content: |
+      # Kubernetes-managed hosts file.
+      127.0.0.1   localhost
+      ::1 localhost ip6-localhost ip6-loopback
+      fe00::0     ip6-localnet
+      fe00::0     ip6-mcastprefix
+      fe00::1     ip6-allnodes
+      fe00::2     ip6-allrouters
+  - path: /etc/hostname
+    content: |
+      {{api_host}}
+
+# define secrets that are managed by CAS 
+secrets:
+  import:
+    - redis_client_cert
+    - redis_ca_cert
+  global:
+    - name: api_ca_key
+      kind: private-key
+    - name: api_ca_cert
+      kind: x509-ca
+      private_key: api_ca_key
+    - name: flask_key
+      kind: private-key
+    - name: flask
+      kind: x509
+      private_key: flask_key
+      issuer: api_ca_cert
+      dns:
+        - api
+
+build:
+  name: python-flask-redis
+  kind: python
+  to: registry.scontain.com:5050/cicd/python_flask_redis:latest
+  pwd: /python
+  requirements: requirments.txt
+  # command: python3 -c 'print("hw")'
+  command: python3 /python/api.py
+  copy:
+    - api.py

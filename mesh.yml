@@ -1,0 +1,41 @@
+apiVersion: scone/5.8
+kind: mesh
+
+cas:
+  - name: cas # cas used to store the policy of this application
+    alias: ["image", "security", "access", "attestation"] # use alias in case CAS instance has multiple roles
+    cas_url: edge.scone-cas.cf  # exported as {{cas_cas_cas_url}}
+    tolerance: "--only_for_testing-trust-any --only_for_testing-debug  --only_for_testing-ignore-signer -C -G -S"
+
+policy:
+  namespace: myFlaskRedis01   # namespace on CAS instance `cas`
+
+# define environment variables   
+env:
+  - name: REDIS_HOST 
+    value: flaskredis-redis-scone
+  - name: REDIS_PORT 
+    value: 6379
+  - name: redis_server_name
+    value: flaskredis-redis-scone
+  - name: imagePullSecrets
+    value: sconeapps
+  - name: APP_SERVICE_PORT
+    value: 4996
+  - name:  restartPolicy
+    value: OnFailure
+  - name: useSGXDevPlugin # value chart
+    value: scone
+  - name: redis_client_name # secrets
+    value: flaskredis-python-hello-user
+  - name: api_host
+    value: "flaskredis-python-hello-user"
+  - name: CLUSTER_DNS_IP
+    value: "10.96.0.10"
+  - name: K8sNAMESPACE
+    value: "default"
+services:
+  - name: flaskredis
+    image: registry.scontain.com:5050/cicd/python_flask_redis:latest
+  - name: redis
+    image: registry.scontain.com:5050/cicd/redis:latest
