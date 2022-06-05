@@ -2,6 +2,10 @@
 
 set -e  -x
 
+# print an error message on an error exiting
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+trap 'if [ $? -ne 0 ]; then echo "\"${last_command}\" command failed - exiting."; fi' EXIT
+
 # ensure we have access to sconectl
 
 if ! command -v sconectl &> /dev/null
