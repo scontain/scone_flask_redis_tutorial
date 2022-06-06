@@ -1,63 +1,94 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
-set -e  -x
+set -e
+
+RED="\e[31m"
+BLUE='\e[34m'
+ORANGE='\e[33m'
+NC='\e[0m' # No Color
+
+RELEASE="flaskredis"
 
 # print an error message on an error exiting
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
-trap 'if [ $? -ne 0 ]; then echo "\"${last_command}\" command failed - exiting."; fi' EXIT
+trap 'if [ $? -ne 0 ]; then echo -e "${RED}\"${last_command}\" command failed - exiting.${NC}"; fi' EXIT
 
-# ensure we have access to sconectl
+echo -e "${BLUE}Checking that we have access to sconectl${NC}"
 
 if ! command -v sconectl &> /dev/null
 then
-    echo "No sconectl found! Installing sconectl!"
-
-    # ensure we have access to a new Rust installation
+    echo -e "${ORANGE}No sconectl found! Installing sconectl!${NC}"
+    echo -e "${ORANGE}Ensuring that we have access to a new Rust installation${NC}"
 
     if ! command -v rustup &> /dev/null
     then
-        echo "No Rust found! Installing Rust!"
+        echo -e "${ORANGE}No Rust found! Installing Rust!${NC}"
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     else
-        echo "Ensuring Rust is up to date"
+        echo -e "${ORANGE}Ensuring Rust is up to date${NC}"
         rustup update
     fi
 
     cargo install sconectl
 fi
 
-# ensure we have access to docker
+echo -e "${BLUE}Checking that we have access to docker${NC}"
 
 if ! command -v docker &> /dev/null
 then
-    echo "No docker found! You need to install docker or podman. EXITING."
+    echo -e "${RED}No docker found! You need to install docker or podman. EXITING.${NC}"
     exit 1
 fi
 
-# ensure we have access to the base container image
+if ! command -v kubectl &> /dev/null
+then
+    echo -e "${RED}Command 'kubectl' not found!${NC}"
+    echo -e "- ${ORANGE}Please install - see https://kubernetes.io/docs/tasks/tools/${NC}"
+    exit 1
+fi
+
+if ! command -v helm &> /dev/null
+then
+    echo -e "${RED}Command 'helm' not found!${NC}"
+    echo -e "- ${ORANGE}Please install - see https://helm.sh/docs/helm/helm_install/${NC}"
+    exit 1
+fi
+
+echo -e "${BLUE}Checking that we have access to the base container image${NC}"
 
 docker pull registry.scontain.com:5050/cicd/sconecli:latest 2> /dev/null || { 
-    echo "You must get access to image `cicd/sconecli:latest`." 
-    echo "Please send email info@scontain.com to ask for access"
+    echo -e "${RED}You must get access to image `cicd/sconecli:latest`." 
+    echo -e "Please send email info@scontain.com to ask for access${NC}"
     exit 1
 }
 
 
-# build service image
-#  - if the push fails, add --no-push or change the TO field
+echo -e "${BLUE}let's ensure that we build everything from scratch${NC}" 
+rm -rf target
+
+
+echo -e  "${BLUE}build service image:${NC} apply -f service.yml"
+echo -e  "${BLUE} - if the push fails, add --no-push to avoid pusing the image, or${NC}"
+echo -e  "${BLUE}   change in file '${ORANGE}service.yml${BLUE}' field '${ORANGE}build.to${BLUE}' to a container repo you have permission to push to.${NC}"
+
  
-sconectl apply -vvvv -f service.yml &> service.log
+sconectl apply -f service.yml
 
-# build application - push policies
-#  - this fails if we have no access to the namespace
-#  - ensure to update the namespace to one that you control
 
-sconectl apply -vvvv -f mesh.yml &> mesh.log
+echo -e "${BLUE}build application and pushing policies:${NC} apply -f mesh.yml"
+echo -e "${BLUE}  - this fails, if you do not have access to the SCONE CAS namespace"
+echo -e "  - update the namespace '${ORANGE}policy.namespace${NC}' to a unique name in '${ORANGE}mesh.yml${NC}'"
 
-# install application
-#  - this requires that kubectl gives access to you K8s cluster
-#  - we first ensure that the old release is not running anymore
+sconectl apply -f mesh.yml
 
-helm uninstall flaskredis 2> /dev/null || true 
+echo -e "${BLUE}Uninstalling application in case it was previously installed:${NC} helm uninstall ${RELEASE}"
+echo -e "${BLUE} - this requires that 'kubectl' gives access to a Kubernetes cluster${NC}"
 
-helm install flaskredis target/helm/
+helm uninstall ${RELEASE} 2> /dev/null || true 
+
+echo -e "${BLUE}install application:${NC} helm install ${RELEASE} target/helm/"
+
+helm install ${RELEASE} target/helm/
+
+echo -e "${BLUE}Check the logs by executing:${NC} kubectl logs ${RELEASE}<TAB>"
+echo -e "${BLUE}Uninstall by executing:${NC} helm uninstall ${RELEASE}"
