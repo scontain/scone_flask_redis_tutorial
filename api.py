@@ -8,8 +8,6 @@ import sys, os, re
 import time
 import socket
 
-from schwifty import IBAN
-
 app = Flask(__name__)
 api = Api(app)
 

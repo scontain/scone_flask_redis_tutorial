@@ -12,7 +12,7 @@ environment:
     - name: SCONE_HEAP
       value: 760M
     - name: SCONE_LOG
-      value: debug
+      value: error
     - name: INIT_CONTAINER1_ENABLE
       value: "false"
     - name: INIT_CONTAINER1
@@ -80,7 +80,6 @@ build:
   to: registry.scontain.com:5050/cicd/python_flask_redis:latest
   pwd: /python
   requirements: requirments.txt
-  # command: python3 -c 'print("hw")'
   command: python3 /python/api.py
   copy:
     - api.py

@@ -92,3 +92,11 @@ helm install ${RELEASE} target/helm/
 
 echo -e "${BLUE}Check the logs by executing:${NC} kubectl logs ${RELEASE}<TAB>"
 echo -e "${BLUE}Uninstall by executing:${NC} helm uninstall ${RELEASE}"
+
+echo -e "${BLUE}Removing previous client flask-api-client"
+kubectl delete flask-api-client 2> /dev/null || true
+
+echo -e "${BLUE}Installing new client flask-api-client"
+kubectl apply -f client/client.yaml 2> /dev/null || true
+
+echo -e "${BLUE}Check the logs by executing:${NC} kubectl logs flask-api-client"
