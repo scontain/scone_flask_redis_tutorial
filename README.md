@@ -16,7 +16,7 @@ We **demonstrate** with the help of a simple Flask-based Service multiple featur
 
 ## Workflow
 
-First, we build a Python image in a very similar way how we would build a native Python image. We specify a manifest `service.yml` that contains a `build` section that specifies that we intend  to build a Python image that deploys a `Flask`-based service. In this process, we need
+First, we build a Python image in a very similar way how we would build a native Python image. We specify a manifest `service.yaml` that contains a `build` section that specifies that we intend  to build a Python image that deploys a `Flask`-based service. In this process, we need
 
 - to install some dependencies that are defied in file `requirements.txt`,
 - to copy one or more Python code files,
@@ -46,13 +46,13 @@ Once you have created your manifest files, you only need to perform the followin
 1. Build the service OCI container image (for each service):
 
 ```bash
-sconectl apply -f service.yml
+sconectl apply -f service.yaml
 ```
 
 2. Build and upload the security policies for all services of the application using:
 
 ```bash
-sconectl apply -f mesh.yml
+sconectl apply -f mesh.yaml
 ```
 
 3. The second step generates a `helm` chart and you can start this application by executing:
@@ -101,7 +101,7 @@ The service uses a Redis instance to store the resources. The communication betw
 
 Redis and the Flask-based service, require that the private keys and certificates are stored in the filesystem. We generate and provision these TLS-related files with the help of a [SCONE policy](https://sconedocs.github.io/CAS_session_lang_0_3/).
 
-To do so, we generate **secrets** related to the Flask-based service. We specify in the `mesh.yml` that
+To do so, we generate **secrets** related to the Flask-based service. We specify in the `mesh.yaml` that
 
 - a private key (`api_ca_key`) for a new certificate authority (CA) is generated
 - a certificate (`api_ca_cert`) for a certification authority is generated
@@ -132,7 +132,7 @@ secrets:
 
 The private keys and certificates are expected at certain locations in the file system. SCONE permits to map these secrets into the filesystem of the Flask-based service: these files are only  visible to the service inside of an SGX enclave after a successful attestation (see below) and in particular, not visible on the outside i.e., in the filesystem of the container.
 
-To map the private keys and certificates into the filesystem of a service, we specify in the policy which secrets are visible to a service at which path. In the [flask policy](https://github.com/scontain/flask_example/blob/master/flask-template.yml) this is done as follows:
+To map the private keys and certificates into the filesystem of a service, we specify in the policy which secrets are visible to a service at which path. In the [flask policy](https://github.com/scontain/flask_example/blob/master/flask-template.yaml) this is done as follows:
 
 ```YML
 images:
@@ -156,7 +156,7 @@ While we do not show how to enforce client authentication of the REST API, we sh
 
 The communication between the Flask-based service, say, $S$ and Redis instance, say, $R$ is encrypted via TLS. Actually, we make sure that the service $S$ and instance $R$ **attest** each other. Attestation means that $S$ ensures that $R$ satisfies all requirements specified in $R$'s security policy and $R$ ensures that $S$ satisfies all the requirements of $S$'s policy. Of course, this should be done without changing the code of neither $S$ nor $R$. In case that $S$ and $R$ are using TLS with client authentication, this is straightforward to enforce. (If this is not the case, please contact us for an alternative.)
 
-To ensure mutual attestation, the operator of Redis defines a [policy](https://github.com/scontain/flask_example/blob/master/redis-template.yml) in which it defines a certification authority (`redis_ca_cert`) and defines both a Redis certificate (`redis_ca_cert`) as well as a Redis client certificate (`redis_client_cert`). The client certificate and the private key (`redis_client_key`) are exported to the policy of the Flask service $S$. The policy for this looks like this:
+To ensure mutual attestation, the operator of Redis defines a [policy](https://github.com/scontain/flask_example/blob/master/redis-template.yaml) in which it defines a certification authority (`redis_ca_cert`) and defines both a Redis certificate (`redis_ca_cert`) as well as a Redis client certificate (`redis_client_cert`). The client certificate and the private key (`redis_client_key`) are exported to the policy of the Flask service $S$. The policy for this looks like this:
 
 ```yml
 secrets:
