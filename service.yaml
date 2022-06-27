@@ -23,6 +23,8 @@ environment:
     - name: REDIS_HOST  # get value from Meshfile
     - name: REDIS_PORT  # get value from Meshfile
     - name: api_host
+    - name: CLUSTER_DNS_IP
+    - name: K8sNAMESPACE
 
 injection_files:
   - path: /tls/client.crt
