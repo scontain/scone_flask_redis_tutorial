@@ -10,30 +10,41 @@ cas:
 policy:
   namespace: myFlaskRedis01cf   # namespace on CAS instance `cas`
 
-# define environment variables   
+
+# define environment variables
+# - this is can be done for each individual service defined in the services section 
+#   - these definitions are only visible for this service
+#   - these definitions overwrite any definitions of the global or helm section 
+# - we define two special services:
+#   - "global": these definitions are shared by all services
+#   - "helm": this behaves like the "global" service - the intention is to
+#             collect helm specific definitions here
 env:
-  - name: REDIS_HOST 
-    value: flaskredis-redis-scone
-  - name: REDIS_PORT 
-    value: 6379
-  - name: redis_server_name
-    value: flaskredis-redis-scone
-  - name: imagePullSecrets
-    value: sconeapps
-  - name: APP_SERVICE_PORT
-    value: 4996
-  - name:  restartPolicy
-    value: OnFailure
-  - name: useSGXDevPlugin # value chart
-    value: scone
-  - name: redis_client_name # secrets
-    value: flaskredis-python-hello-user
-  - name: api_host
-    value: "flaskredis-python-hello-user"
-  - name: CLUSTER_DNS_IP
-    value: "10.96.0.10"
-  - name: K8sNAMESPACE
-    value: "default"
+  - service: global
+    env:
+    - name: REDIS_HOST 
+      value: flaskredis-redis-scone
+    - name: REDIS_PORT 
+      value: 6379
+    - name: redis_server_name
+      value: flaskredis-redis-scone
+    - name: imagePullSecrets
+      value: sconeapps
+    - name: APP_SERVICE_PORT
+      value: 4996
+    - name:  restartPolicy
+      value: OnFailure
+    - name: useSGXDevPlugin # value chart
+      value: scone
+    - name: redis_client_name # secrets
+      value: flaskredis-python-hello-user
+    - name: api_host
+      value: "flaskredis-python-hello-user"
+    - name: CLUSTER_DNS_IP
+      value: "10.96.0.10"
+    - name: K8sNAMESPACE
+      value: "default"
+
 services:
   - name: flaskredis
     image: registry.scontain.com:5050/cicd/python_flask_redis:latest
