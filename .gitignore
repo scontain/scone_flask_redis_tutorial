@@ -2,3 +2,5 @@ target
 mesh.log
 service.log
 .kube
+service.yaml
+mesh.yaml
