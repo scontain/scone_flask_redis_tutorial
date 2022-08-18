@@ -47,6 +47,6 @@ env:
 
 services:
   - name: flaskredis
-    image: registry.scontain.com:5050/cicd/python_flask_redis:latest
+    image: $APP_IMAGE_REPO/python_flask_redis:latest
   - name: redis
-    image: registry.scontain.com:5050/cicd/redis:latest
+    image: registry.scontain.com:5050/sconectl/redis:latest
