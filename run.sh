@@ -12,7 +12,7 @@ source release.sh || true # get release name
 
 if [ -z "$APP_NAMESPACE" ] ; then
     export APP_NAMESPACE="$RELEASE-$RANDOM-$RANDOM"
-    echo -e "export APP_NAMESPACE=pythonapp-$RANDOM-$RANDOM\n" >> release.sh  
+    echo -e "export APP_NAMESPACE=$RELEASE-$RANDOM-$RANDOM\n" >> release.sh  
 else 
     echo "CAS Namespace already defined: $APP_NAMESPACE"
 fi
