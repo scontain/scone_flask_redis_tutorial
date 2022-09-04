@@ -8,7 +8,7 @@ cas:
     tolerance: "--only_for_testing-trust-any --only_for_testing-debug  --only_for_testing-ignore-signer -C -G -S"
 
 policy:
-  namespace: myFlaskRedis01cf   # namespace on CAS instance `cas`
+  namespace: $APP_NAMESPACE   # namespace on CAS instance `cas`
 
 
 # define environment variables
@@ -44,9 +44,11 @@ env:
       value: "10.96.0.10"
     - name: K8sNAMESPACE
       value: "default"
+    - name: sgxEpcMem
+      value: 128
 
 services:
   - name: flaskredis
     image: $APP_IMAGE_REPO/python_flask_redis:latest
   - name: redis
-    image: registry.scontain.com:5050/sconectl/redis:latest
+    image: registry.scontain.com:5050/cicd/redis:latest
