@@ -23,11 +23,11 @@ env:
   - service: global
     env:
     - name: REDIS_HOST 
-      value: flaskredis-redis-scone
+      value: $RELEASE
     - name: REDIS_PORT 
       value: 6379
     - name: redis_server_name
-      value: flaskredis-redis-scone
+      value: $RELEASE-redis
     - name: imagePullSecrets
       value: sconeapps
     - name: APP_SERVICE_PORT
@@ -37,13 +37,13 @@ env:
     - name: useSGXDevPlugin # value chart
       value: scone
     - name: redis_client_name # secrets
-      value: flaskredis-python-hello-user
+      value: $RELEASE-python-hello-user
     - name: api_host
-      value: "flaskredis-python-hello-user"
+      value: "$RELEASE-python-hello-user"
     - name: CLUSTER_DNS_IP
       value: "10.96.0.10"
     - name: K8sNAMESPACE
-      value: "default"
+      value: "$NAMESPACE"
     - name: sgxEpcMem
       value: 128
 

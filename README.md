@@ -221,3 +221,58 @@ images:
         - path: /tls/client.key
           content: $$SCONE::redis_client_cert.key$$
 ```
+
+## Customization
+
+### Release Name
+
+You can deploy using a different helm release name by adding the option `-r <RELEASE>` to the `run` script. Note that when you change the release name,
+the hostname of  Redis changes. To simplify the experimentation, we make the release name configurable in our template manifests:
+
+- `$RELEASE`: denotes the name of the helm release
+
+### Kubernetes Namespace
+
+One can deploy the helm chart to different Kubernetes namespaces by adding option `-n <NAMESPACE>` to the `run` script.  Note that when you change the release name, the hostname of Redis changes too. To simplify the experimentation, we make the namespace configurable in our template manifests:
+
+- `$NAMESPACE`: denotes the Kubernetes namespace to be used by the helm release
+
+#### Notes
+
+- You need to create the Kubernetes namespace beforehand. You can create a namespace `development`  by executing:
+
+```bash
+kubectl create -f  https://kubernetes.io/examples/admin/namespace-dev.json
+```
+
+- If you want to change the namespace, just download the example manifest to file (e.g. `namespace-manifest.json`) and edit this file accordingly:
+
+```bash
+curl  https://kubernetes.io/examples/admin/namespace-dev.json -o namespace-manifest.json
+```
+
+### Create A PULL Secret
+
+Container images are typically stored in a private Docker Hub repo. Hence, to deploy these images, we need to grant access to these images. 
+
+When you services in a new Kubernetes namespace, you need to define the image pull secrets for this namespace.
+
+All the SCONE base images (aka SCONE Elements) require credentials. To do so, you need to create a Kubernetes secret 'sconeapps' containing these credentials.
+
+You could first define your credentials which includes the generation of an access token to read_registry and set:
+
+export SCONE_HUB_USERNAME=...
+export SCONE_HUB_ACCESS_TOKEN=...
+export SCONE_HUB_EMAIL=...
+and then create a Kubernetes secret as follows:
+
+```bash
+kubectl create secret docker-registry sconeapps --docker-server=registry.scontain.com:5050 --docker-username=$SCONE_HUB_USERNAME --docker-password=$SCONE_HUB_ACCESS_TOKEN --docker-email=$SCONE_HUB_EMAIL
+```
+
+Our helm charts will refer to this secret by default. In case you already use a different secret name for your SCONE HUB credentials, you can overwrite the name of the secret by changing the value of `imagePullSecrets` in the mesh file.
+
+### CAS Namespace
+
+The CAS namespace is denoted with environment variable `$APP_NAMESPACE`.
+By default, we generate a random CAS namespace.

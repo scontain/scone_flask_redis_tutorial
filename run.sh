@@ -119,10 +119,14 @@ while [[ "$#" -gt 0 ]]; do
   esac
 done
 
+export RELEASE="$release"
+
 if [ ! -n "${ns}" ]; then
     namespace_arg=""
+    export NAMESPACE="default"
 else
     namespace_arg="${ns_flag} ${ns} "
+    export NAMESPACE="${ns}"
 fi
 
 if [  "${repo}" == "" ]; then

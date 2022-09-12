@@ -4,3 +4,5 @@ service.log
 .kube
 service.yaml
 mesh.yaml
+mesh_out.yaml
+namespace-manifest.json
