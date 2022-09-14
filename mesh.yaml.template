@@ -23,7 +23,7 @@ env:
   - service: global
     env:
     - name: REDIS_HOST 
-      value: $RELEASE
+      value: $RELEASE-redis
     - name: REDIS_PORT 
       value: 6379
     - name: redis_server_name
@@ -48,7 +48,7 @@ env:
       value: 128
 
 services:
-  - name: flaskredis
+  - name: flask
     image: $APP_IMAGE_REPO/python_flask_redis:latest
   - name: redis
     image: registry.scontain.com:5050/cicd/redis:latest

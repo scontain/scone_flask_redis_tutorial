@@ -1,2 +1,2 @@
-export RELEASE="flaskredis"
+export RELEASE="myflasksvc"
 

@@ -119,14 +119,10 @@ while [[ "$#" -gt 0 ]]; do
   esac
 done
 
-export RELEASE="$release"
-
 if [ ! -n "${ns}" ]; then
     namespace_arg=""
-    export NAMESPACE="default"
 else
     namespace_arg="${ns_flag} ${ns} "
-    export NAMESPACE="${ns}"
 fi
 
 if [  "${repo}" == "" ]; then
@@ -134,6 +130,7 @@ if [  "${repo}" == "" ]; then
     error_exit  "Error: You must specify a repo."
 fi
 export APP_IMAGE_REPO="${repo}"
+export RELEASE="$release"
 
 # Check to make sure all prerequisites are installed
 ./check_prerequisites.sh

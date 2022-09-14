@@ -58,13 +58,13 @@ sconectl apply -f mesh.yaml
 3. The second step generates a `helm` chart and you can start this application by executing:
 
 ```bash
-helm install flaskredis target/helm
+helm install myflasksvc target/helm
 ```
 
 That's it! You can now inspect the output with `kubectl` (assuming you have  `kubectl` command completion installed):
 
 ```bash
-kubectl logs flaskredis<TAB>
+kubectl logs myflasksvc<TAB>
 ```
 
 But in case you are interested in what is going on under the hood, we explain the steps in some more details below.
