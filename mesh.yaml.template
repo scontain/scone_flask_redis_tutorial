@@ -51,4 +51,4 @@ services:
   - name: flask
     image: $APP_IMAGE_REPO/python_flask_redis:latest
   - name: redis
-    image: registry.scontain.com:5050/cicd/redis:latest
+    image: $SCONECTL_REPO/redis:latest
