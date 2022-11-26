@@ -19,7 +19,7 @@ fi
 
 DEFAULT_NAMESPACE="" # Default Kubernetes namespace to use
 export APP_IMAGE_REPO=${APP_IMAGE_REPO:=""} # Must be defined!
-export SCONECTL_REPO=${SCONECTL_REPO:="registry.scontain.com:5050/sconectl"}
+export SCONECTL_REPO=${SCONECTL_REPO:="registry.scontain.com/sconectl"}
 
 # print an error message on an error exit
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
@@ -78,7 +78,7 @@ usage ()
   echo "                  Output this usage information and exit."
   echo ""
   echo "By default this uses the latest release of the SCONE Elements images. To use image from a different"
-  echo "repository (e.g., a local cache), set SCONECTL_REPO to the repo you want to use instead."
+  echo "repository (e.g., a local cache), set SCONECTL_REPO (=\"$SCONECTL_REPO\") to the repo you want to use instead."
   return
 }
 

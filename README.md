@@ -267,7 +267,7 @@ export SCONE_HUB_EMAIL=...
 and then create a Kubernetes secret as follows:
 
 ```bash
-kubectl create secret docker-registry sconeapps --docker-server=registry.scontain.com:5050 --docker-username=$SCONE_HUB_USERNAME --docker-password=$SCONE_HUB_ACCESS_TOKEN --docker-email=$SCONE_HUB_EMAIL
+kubectl create secret docker-registry sconeapps --docker-server=registry.scontain.com --docker-username=$SCONE_HUB_USERNAME --docker-password=$SCONE_HUB_ACCESS_TOKEN --docker-email=$SCONE_HUB_EMAIL
 ```
 
 Our helm charts will refer to this secret by default. In case you already use a different secret name for your SCONE HUB credentials, you can overwrite the name of the secret by changing the value of `imagePullSecrets` in the mesh file.
