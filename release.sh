@@ -1,2 +1,2 @@
-export APP_NAMESPACE=flaskredis-6655-9478
+export APP_NAMESPACE=flaskredis-10167-28543
 
