@@ -9,7 +9,7 @@ export ORANGE='\e[33m'
 export NC='\e[0m' # No Color
 
 APP_NAMESPACE=""
-source release.sh || true # get release name
+source release.sh 2> /dev/null || true # get release name
 
 
 DEFAULT_NAMESPACE="" # Default Kubernetes namespace to use
