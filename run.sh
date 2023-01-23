@@ -189,8 +189,8 @@ docker inspect $SCONECTL_REPO/sconecli:latest > /dev/null 2> /dev/null || docker
 }
 
 
-echo -e "${BLUE}let's ensure that we build everything from scratch${NC}" 
-rm -rf target || echo -e "${ORANGE} Failed to delete target directory - ignoring this! ${NC}"
+# echo -e "${BLUE}let's ensure that we build everything from scratch${NC}" 
+# rm -rf target || echo -e "${ORANGE} Failed to delete target directory - ignoring this! ${NC}"
 
 
 echo -e  "${BLUE}build service image:${NC} apply -f service.yaml"
