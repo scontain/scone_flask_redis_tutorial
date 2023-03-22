@@ -79,7 +79,7 @@ secrets:
 build:
   name: python-flask-redis
   kind: python
-  to: $APP_IMAGE_REPO/python_flask_redis:latest
+  to: $APP_IMAGE_REPO/python_flask_redis:${VERSION}
   pwd: /python
   requirements: requirments.txt
   # command: python3 -c 'print("hw")'
