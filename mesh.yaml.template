@@ -53,6 +53,6 @@ env:
 
 services:
   - name: flask
-    image: $APP_IMAGE_REPO/python_flask_redis:${VERSION}
+    image: $APP_IMAGE_REPO/python_flask_redis:latest
   - name: redis
     image: $SCONECTL_REPO/redis:${VERSION}
