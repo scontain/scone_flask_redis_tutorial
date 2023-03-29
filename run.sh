@@ -212,7 +212,7 @@ echo -e  "${BLUE}   change in file '${ORANGE}service.yaml${BLUE}' field '${ORANG
 
 SCONE="\$SCONE" envsubst < service.yaml.template > service.yaml
 
-sconectl apply -f service.yaml $verbose $debug
+sconectl apply -f service.yaml $verbose $debug --set-version ${VERSION}
 
 echo -e "${BLUE}Determine the keys of CAS $CAS in namespace $CAS_NAMESPACE"
 
@@ -224,7 +224,8 @@ echo -e "  - update the namespace '${ORANGE}policy.namespace${NC}' to a unique n
 
 SCONE="\$SCONE" envsubst < mesh.yaml.template > mesh.yaml
 
-sconectl apply -f mesh.yaml --release "$RELEASE" $verbose $debug
+export CAS_URL="${CAS}.${CAS_NAMESPACE}"
+sconectl apply -f mesh.yaml --release "$RELEASE" $verbose $debug --set-version ${VERSION}
 
 echo -e "${BLUE}Uninstalling application in case it was previously installed:${NC} helm uninstall ${namespace_args} ${RELEASE}"
 echo -e "${BLUE} - this requires that 'kubectl' gives access to a Kubernetes cluster${NC}"
