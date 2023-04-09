@@ -1,5 +1,18 @@
 # Building a Confidential Flask-Based Application using `sconectl`
 
+## TL'DR
+
+```bash
+# define REPO to which you permitted to push container images
+REPO="<YOUR-REPO>" 
+# cleanup the last state
+rm -rf release.sh target;
+# execute all steps of this tutorial 
+./run.sh -i "$REPO" --release flaskredis
+```
+
+## Introduction
+
 We **demonstrate** with the help of a simple Flask-based Service multiple features of the SCONE platform:
 
 - we show that we can execute **unmodified Python** programs inside of SGX enclaves
@@ -13,6 +26,7 @@ We **demonstrate** with the help of a simple Flask-based Service multiple featur
     - on a generic Kubernetes cluster, and
 
 ![Mutual Protection](attestation.png)
+
 
 ## Workflow
 
