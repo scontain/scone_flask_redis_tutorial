@@ -13,6 +13,7 @@ cas:
 policy:
   namespace: $APP_NAMESPACE   # namespace on CAS instance `cas`
   tolerate: "outdated-tcb, insecure-configuration,hyperthreading, insecure-igpu, software-hardening-needed"
+  ignore_advisories: "*"
 
 
 # define environment variables
