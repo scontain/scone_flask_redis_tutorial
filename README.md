@@ -6,7 +6,7 @@
 # define REPO to which you permitted to push container images
 REPO="<YOUR-REPO>" 
 # cleanup the last state
-rm -rf release.sh target;
+rm -rf release.sh target
 # execute all steps of this tutorial 
 ./run.sh -i "$REPO" --release flaskredis
 ```
