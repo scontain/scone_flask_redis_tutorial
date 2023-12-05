@@ -190,15 +190,16 @@ fi
 # Check to make sure all prerequisites are installed
 a=0
 while ! ./check_prerequisites.sh; do
-    sleep 10;
     a=$[a+1];
+    echo -e "${ORANGE}Retrying ($a of 10) in 10 seconds${NC}."
+    sleep 10;
     test $a -eq 10 && exit 1 || true;
 done
 
 echo -e "${BLUE}Checking that we have access to the base container image${NC}"
 
 docker inspect $SCONECTL_REPO/sconecli:${VERSION} > /dev/null 2> /dev/null || docker pull $SCONECTL_REPO/sconecli:${VERSION} > /dev/null 2> /dev/null || { 
-    echo -e "${RED}You must get access to image `${SCONECTL_REPO}/sconecli:${VERSION}`.${NC}" 
+    echo -e "${RED}You must get access to image \"${SCONECTL_REPO}/sconecli:${VERSION}\".${NC}" 
     error_exit "Please send email info@scontain.com to ask for access"
 }
 
