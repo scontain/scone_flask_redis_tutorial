@@ -2,8 +2,10 @@
 
 ```bash
 # In case you want to test a release candidate of `sconectl`, you can change the repo and the VERSION
-export SCONECTL_REPO=registry.scontain.com/cicd
-export VERSION=5.8.0-rc.25
+export SCONECTL_REPO=registry.scontain.com/cicd # default is registry.scontain.com/sconectl
+export VERSION=5.8.0  # default version is "latest".
+export CAS="cas" # set the name of the CAS instance that we should used; default is "cas"
+export CAS_NAMESPACE="default" # set the Kubernetes namespace of the CAS instance that we should used; default is "default"
 # if you want to use the latest stable release, ensure that these variables are not set:
 unset SCONECTL_REPO
 unset VERSION
