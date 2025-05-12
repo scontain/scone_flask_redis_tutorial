@@ -22,7 +22,7 @@ I=0
 
 while [[ "$READY" != "true"  ]] ; do
     ((I=I+1))
-    if [[ $I -ge 32 ]] ; then
+    if [[ $I -ge 128 ]] ; then
         echo "Giving up waiting for $POD to become 'ready'"
         exit 1
     fi
